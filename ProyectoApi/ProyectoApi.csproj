@@ -16,10 +16,6 @@
 
   <ItemGroup>
     <Folder Include="DTOs\" />
-    <Folder Include="Endpoints\" />
-    <Folder Include="Utilidades\" />
-    <Folder Include="Servicios\" />
-    <Folder Include="Repositorios\" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,8 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Cors;
+using ProyectoApi.Endpoints;
+using ProyectoApi.Repositorios;
+using ProyectoApi.Servicios;
 
 var builder = WebApplication.CreateBuilder(args);
 //poner la ip de quien puede acceder en el appsettings
@@ -22,7 +25,8 @@ builder.Services.AddCors(opciones =>
 builder.Services.AddOutputCache();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddScoped(typeof(IRepositorio<>), typeof(Repositorio<>));
+builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddAutoMapper(typeof(Program));
 
@@ -44,6 +48,16 @@ app.UseStaticFiles();
 app.UseCors();
 app.UseOutputCache();
 app.MapGet("/", [EnableCors(policyName: "libre")] () => "Web Api - Proyecto API para Diplomado LANIA - ©2025");
+
+app.MapGroup("/usuarios").MapUsuarios();
+app.MapGroup("/personas").MapPersonas();
+app.MapGroup("/domicilios").MapDomicilios();
+app.MapGroup("/contactos").MapContactos();
+app.MapGroup("/estudios").MapEstudios();//File
+app.MapGroup("/documentos").MapDocumentos();//File
+app.MapGroup("/pagos").MapPagos();//File
+app.MapGroup("/inscripciones").MapInscripciones();
+app.MapGroup("/convocatorias").MapConvocatorias();
 
 #endregion
 app.Run();

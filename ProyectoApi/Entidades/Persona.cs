@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ProyectoApi.Entidades
 {
@@ -18,5 +19,10 @@ namespace ProyectoApi.Entidades
         public int UsuarioIdModifico { get; set; }
         public string? Observaciones { get; set; }
         public bool? Validado { get; set; }
+        [NotMapped]
+        public Domicilio? Domicilio { get; set; }
+
+        [NotMapped]
+        public List<Contacto> Contactos { get; set; } = new List<Contacto>();
     }
 }
