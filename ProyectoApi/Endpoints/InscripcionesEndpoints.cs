@@ -14,6 +14,7 @@ namespace ProyectoApi.Endpoints
             group.MapGet("/", GetAll).CacheOutput(c => c.Expire(TimeSpan.FromSeconds(60)).Tag("inscripciones-get"));
             group.MapGet("/{id:int}", GetById);
             group.MapGet("/user/{id:int}", GetByUserId);
+            group.MapGet("/convocatoria/{id:int}", GetByConvocatoriaId);
             group.MapPost("/", Add);
             group.MapPut("/{id:int}", Update);
             group.MapDelete("/{id:int}", Delete);
@@ -40,6 +41,13 @@ namespace ProyectoApi.Endpoints
         static async Task<Ok<List<Inscripcion>>> GetByUserId(int id, IRepositorio<Inscripcion> repositorio)
         {
             var model = await repositorio.GetAllByUserId(id);
+            return TypedResults.Ok(model);
+        }
+
+        static async Task<Ok<List<Inscripcion>>> GetByConvocatoriaId(IRepositorio<Inscripcion> repositorio, int id, int pagina = 1, int recordsPorPagina = 20)
+        {
+            var paginacion = new PaginacionDTO { Pagina = pagina, RecordsPorPagina = recordsPorPagina };
+            var model = await repositorio.GetAllByParam(paginacion, "ConvocatoriaId",id.ToString());
             return TypedResults.Ok(model);
         }
 

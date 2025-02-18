@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <Folder Include="DTOs\" />
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
 </Project>

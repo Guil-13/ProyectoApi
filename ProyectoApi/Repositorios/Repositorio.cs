@@ -88,7 +88,8 @@ namespace ProyectoApi.Repositorios
                     query += $"{prop}=@{prop},";
                 }
                 query = query.Substring(0, query.Length - 1);
-                await connection.ExecuteAsync($@"UPDATE {Utils.GetTableName<T>()}
+                var tableName = Utils.GetTableName<T>();
+                await connection.ExecuteAsync($@"UPDATE {tableName}
                                           SET {query}
                                           WHERE Id=@Id;", model);
             }

@@ -18,17 +18,15 @@ namespace ProyectoApi.Validaciones
             }
 
             RuleFor(x => x.UsuarioId).NotEmpty().WithMessage(Utilidades.RequiredFieldMenssage);
-
             RuleFor(x => x.TipoId).NotEmpty().WithMessage(Utilidades.RequiredFieldMenssage);
-
             RuleFor(x => x.Nombre).NotEmpty().WithMessage(Utilidades.RequiredFieldMenssage);
-
             RuleFor(x => x.Url).NotEmpty().WithMessage(Utilidades.RequiredFieldMenssage);
-
             RuleFor(x => x.FechaRegistro).NotEmpty().WithMessage(Utilidades.RequiredFieldMenssage);
-
             RuleFor(x => x.UsuarioIdModificado).NotEmpty().WithMessage(Utilidades.RequiredFieldMenssage);
 
+            //Validacion de archivos
+            RuleFor(x => x.Url).Must(Utilidades.IsFormatPDF).WithMessage(Utilidades.IsFormatPDFMessage)
+                .Must(Utilidades.IsLessThan1Mb).WithMessage(Utilidades.IsLessThan1MbMessage);
         }
     }
 }

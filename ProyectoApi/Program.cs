@@ -42,7 +42,7 @@ if (builder.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseStatusCodePages();
 app.UseStaticFiles();
 
 app.UseCors();

@@ -13,7 +13,8 @@
         public static string RequiredOneLowerLetter = "Tu password debe contener al menos una letra en minúscula";
         public static string RequiredOneNumber = "Tu password debe contener al menos un número";
         public static string RequiredOneSpeciaCharacter = "Tu password debe contener al menos un carácter (!? *.-)";
-
+        public static string IsFormatPDFMessage = "El archivo debe ser en formato pdf";
+        public static string IsLessThan1MbMessage = "El tamaño del archivo debe ser maximo de 1Mb";
         public static string GreaterThanOrEqualToMessage(DateTime fechaMinima)
         {
             return "El campo {PropertyName} debe ser posterior a " + fechaMinima.ToString("yyyy-MM-dd");
@@ -35,6 +36,19 @@
             }
 
             return true;
+        }
+
+        public static bool IsFormatPDF(IFormFile? url)
+        {
+            if (url is null) return true;
+            var ext = Path.GetExtension(url.FileName);
+            return ext.ToLower().Contains("pdf");
+        }
+
+        public static bool IsLessThan1Mb(IFormFile? url)
+        {
+            if(url is null) return true;
+            return url.Length <= 1 * 1024 * 1024; 
         }
     }
 }

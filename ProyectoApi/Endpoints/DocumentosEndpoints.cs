@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 using ProyectoApi.DTOs;
 using ProyectoApi.Entidades;
+using ProyectoApi.Filtros;
 using ProyectoApi.Repositorios;
 using ProyectoApi.Servicios;
 
@@ -17,8 +18,8 @@ namespace ProyectoApi.Endpoints
             group.MapGet("/", GetAll).CacheOutput(c => c.Expire(TimeSpan.FromSeconds(60)).Tag("documentos-get"));
             group.MapGet("/{id:int}", GetById);
             group.MapGet("/user/{id:int}", GetByUserId);
-            group.MapPost("/", Add).DisableAntiforgery();
-            group.MapPut("/{id:int}", Update).DisableAntiforgery();
+            group.MapPost("/", Add).DisableAntiforgery().AddEndpointFilter<FiltroValidaciones<AddDocumentoDTO>>();
+            group.MapPut("/{id:int}", Update).DisableAntiforgery().AddEndpointFilter<FiltroValidaciones<AddDocumentoDTO>>();
             group.MapDelete("/{id:int}", Delete);
             return group;
         }

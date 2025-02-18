@@ -11,7 +11,6 @@
         public string Generacion { get; set; } = null!;
         public DateTime FechaRegistro { get; set; }
         public int UsuarioIdModifico { get; set; }
-        public int DocumentoId { get; set; }
         public bool? Validado { get; set; }
         public string? Observaciones { get; set; }
         public string? FileName { get; set; }

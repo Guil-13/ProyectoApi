@@ -30,6 +30,10 @@ namespace ProyectoApi.Validaciones
             RuleFor(x => x.FechaRegistro).NotEmpty().WithMessage(Utilidades.RequiredFieldMenssage);
             RuleFor(x => x.UsuarioIdModifico).NotEmpty().WithMessage(Utilidades.RequiredFieldMenssage);
             RuleFor(x => x.Observaciones).MaximumLength(255).WithMessage(Utilidades.MaximumLenghtMessage);
+
+            //Validacion de archivos
+            RuleFor(x => x.Url).Must(Utilidades.IsFormatPDF).WithMessage(Utilidades.IsFormatPDFMessage)
+                .Must(Utilidades.IsLessThan1Mb).WithMessage(Utilidades.IsLessThan1MbMessage);
         }
     }
 }
