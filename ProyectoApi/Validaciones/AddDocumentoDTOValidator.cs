@@ -19,7 +19,7 @@ namespace ProyectoApi.Validaciones
 
             RuleFor(x => x.UsuarioId).NotEmpty().WithMessage(Utilidades.RequiredFieldMenssage);
             RuleFor(x => x.TipoId).NotEmpty().WithMessage(Utilidades.RequiredFieldMenssage);
-            RuleFor(x => x.Nombre).NotEmpty().WithMessage(Utilidades.RequiredFieldMenssage);
+            //RuleFor(x => x.Nombre).NotEmpty().WithMessage(Utilidades.RequiredFieldMenssage);
             RuleFor(x => x.Url).NotEmpty().WithMessage(Utilidades.RequiredFieldMenssage);
             RuleFor(x => x.FechaRegistro).NotEmpty().WithMessage(Utilidades.RequiredFieldMenssage);
             RuleFor(x => x.UsuarioIdModificado).NotEmpty().WithMessage(Utilidades.RequiredFieldMenssage);

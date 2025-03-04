@@ -26,6 +26,7 @@ builder.Services.AddOutputCache();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped(typeof(IRepositorio<>), typeof(Repositorio<>));
+builder.Services.AddScoped<IRepositorioStoredProcedures, RepositorioStoredProcedures>();
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddAutoMapper(typeof(Program));
@@ -58,6 +59,6 @@ app.MapGroup("/documentos").MapDocumentos();//File
 app.MapGroup("/pagos").MapPagos();//File
 app.MapGroup("/inscripciones").MapInscripciones();
 app.MapGroup("/convocatorias").MapConvocatorias();
-
+app.MapGroup("/sp").MapStoredProcedures();
 #endregion
 app.Run();

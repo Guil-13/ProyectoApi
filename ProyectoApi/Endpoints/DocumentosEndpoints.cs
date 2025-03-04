@@ -47,12 +47,36 @@ namespace ProyectoApi.Endpoints
             return TypedResults.Ok(model);
         }
 
-        static async Task<Created<Documento>> Add([FromForm] AddDocumentoDTO addModelDTO, IRepositorio<Documento> repositorio, IOutputCacheStore outputCacheStore, IMapper mapper, IFileService fileService)
+        static async Task<Created<Documento>> Add([FromForm] AddDocumentoDTO addModelDTO, IRepositorio<Documento> repositorio, IRepositorio<Persona> repositorioPersona, IOutputCacheStore outputCacheStore, IMapper mapper, IFileService fileService)
         {
             var model = mapper.Map<Documento>(addModelDTO);
-            if (addModelDTO.Url is not null && addModelDTO.Nombre is not null)
+            if (addModelDTO.Url is not null)
             {
-                var url = await fileService.Save(addModelDTO.Nombre, contenedor, addModelDTO.Url);
+                var persona = await repositorioPersona.GetByUserId(model.UsuarioId);
+                string tipoDescriptivo = string.Empty;
+                switch (model.TipoId)
+                {
+                    case 1:
+                        tipoDescriptivo = "Foto";
+                        break;
+                    case 3:
+                        tipoDescriptivo = "Identificacion Oficial";
+                        break;
+                    case 4:
+                        tipoDescriptivo = "Acta de Nacimiento";
+                        break;
+                    case 6:
+                        tipoDescriptivo = "Carta Compromiso";
+                        break;
+                    case 7:
+                        tipoDescriptivo = "CURP";
+                        break;
+                    default:
+                        tipoDescriptivo = null;
+                        break;
+                }
+                model.Nombre = persona.Nombre + "_" + persona.PrimerApellido + "_" + persona.SegundoApellido + "_" + tipoDescriptivo + "_" + model.InscripcionId + ".pdf";
+                var url = await fileService.Save(model.Nombre, contenedor, addModelDTO.Url);
                 model.Url = url;
             }
 
@@ -72,17 +96,17 @@ namespace ProyectoApi.Endpoints
             var model = mapper.Map<Documento>(addModelDTO);
 
             //Si trae nuevo archivo
-            if (addModelDTO.Url is not null && addModelDTO.Nombre is not null)
+            if (addModelDTO.Url is not null)
             {
-                var url = await fileService.Replace(addModelDTO.Nombre, modelAnterior.Url, contenedor, addModelDTO.Url);
+                var url = await fileService.Replace(modelAnterior.Nombre, modelAnterior.Url, contenedor, addModelDTO.Url);
                 model.Url = url;
             }
             else
             {
                 //Mantiene la misma info si no hay nuevo archivo
-                model.Nombre = modelAnterior.Nombre;
                 model.Url = modelAnterior.Url;
             }
+            model.Nombre = modelAnterior.Nombre;
             model.Id = id;
             await repositorio.Update(model);
             await outputCacheStore.EvictByTagAsync("documentos-get", default);

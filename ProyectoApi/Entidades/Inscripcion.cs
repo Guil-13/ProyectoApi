@@ -8,7 +8,7 @@ namespace ProyectoApi.Entidades
         public int Id { get; set; }
         public int ConvocatoriaId { get; set; }
         public int UsuarioId { get; set; }
-        public int OfertaId { get; set; }
+        public int ProgramaId { get; set; }
         public DateTime FechaRegistro   { get; set; }
         public int SedeId  { get; set; }
         public string? Matricula { get; set; }

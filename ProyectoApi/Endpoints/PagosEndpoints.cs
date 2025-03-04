@@ -51,12 +51,30 @@ namespace ProyectoApi.Endpoints
             return TypedResults.Ok(model);
         }
 
-        static async Task<Created<Pago>> Add([FromForm] AddPagoDTO addModelDTO, IRepositorio<Pago> repositorio, IOutputCacheStore outputCacheStore, IMapper mapper, IFileService fileService)
+        static async Task<Created<Pago>> Add([FromForm] AddPagoDTO addModelDTO, IRepositorio<Pago> repositorio, IRepositorio<Persona> repositorioPersona, IOutputCacheStore outputCacheStore, IMapper mapper, IFileService fileService)
         {
             var model = mapper.Map<Pago>(addModelDTO);
-            if (addModelDTO.Url is not null && addModelDTO.Nombre is not null)
+            if (addModelDTO.Url is not null)
             {
-                var url = await fileService.Save(addModelDTO.Nombre, contenedor, addModelDTO.Url);
+                var persona = await repositorioPersona.GetByUserId(model.UsuarioId);
+                string tipoPagoDescriptivo = string.Empty;
+                switch (model.TipoPago)
+                {
+                    case 1:
+                        tipoPagoDescriptivo = "Voucher_Inscripcion";
+                        break;
+                    case 2:
+                        tipoPagoDescriptivo = "Voucher_Pago";
+                        break;
+                    case 3:
+                        tipoPagoDescriptivo = "Voucher_Pago2";
+                        break;
+                    default:
+                        tipoPagoDescriptivo = null;
+                        break;
+                }
+                model.Nombre = persona.Nombre + "_" + persona.PrimerApellido + "_" + persona.SegundoApellido + "_" + tipoPagoDescriptivo + "_" + model.InscripcionId + ".pdf";
+                var url = await fileService.Save(model.Nombre, contenedor, addModelDTO.Url);
                 model.Url = url;
             }
 
@@ -77,18 +95,18 @@ namespace ProyectoApi.Endpoints
             var model = mapper.Map<Pago>(addModelDTO);
 
             //Si trae nuevo archivo
-            if (addModelDTO.Url is not null && addModelDTO.Nombre is not null)
+            if (addModelDTO.Url is not null)
             {
-                var url = await fileService.Replace(addModelDTO.Nombre, modelAnterior.Url, contenedor, addModelDTO.Url);
+                var url = await fileService.Replace(modelAnterior.Nombre, modelAnterior.Url, contenedor, addModelDTO.Url);
                 model.Url = url;
             }
             else
             {
                 //Mantiene la misma info si no hay nuevo archivo
-                model.Nombre = modelAnterior.Nombre;
                 model.Url = modelAnterior.Url;
             }
 
+            model.Nombre = modelAnterior.Nombre;
             model.Id = id;
             await repositorio.Update(model);
             await outputCacheStore.EvictByTagAsync("pagos-get", default);
