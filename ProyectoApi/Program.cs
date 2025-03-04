@@ -4,7 +4,7 @@ using ProyectoApi.Endpoints;
 using ProyectoApi.Repositorios;
 using ProyectoApi.Servicios;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args); 
 //poner la ip de quien puede acceder en el appsettings
 var origenesPermitidos = builder.Configuration.GetValue<string>("OrigenesPermitidos")!;
 #region Servicios
