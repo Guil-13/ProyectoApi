@@ -14,6 +14,7 @@ namespace ProyectoApi.Repositorios
         Task<bool> AnyByParam(int id, string param, string value);
         Task Delete(int id);
         Task<List<T>> GetAll(PaginacionDTO paginacion);
+        Task<List<T>> GetAllBy2ParamsSinPaginacion(string param, string value, string param2, string value2);
         Task<List<T>> GetAllByParam(PaginacionDTO paginacion, string param, string value);
         Task<List<T>> GetAllByParamSinPaginacion(string param, string value);
         Task<List<T>> GetAllByUserId(int userId);
@@ -201,6 +202,16 @@ namespace ProyectoApi.Repositorios
                 var model = await connection.QueryAsync<T>($@"SELECT * FROM {Utils.GetTableName<T>()} 
                                                             WHERE {param}=@value
                                                             ORDER BY Id", new { value });
+                return model.ToList();
+            }
+        }
+        public async Task<List<T>> GetAllBy2ParamsSinPaginacion(string param, string value, string param2, string value2)
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                var model = await connection.QueryAsync<T>($@"SELECT * FROM {Utils.GetTableName<T>()} 
+                                                            WHERE {param}=@value and {param2}=@value2
+                                                            ORDER BY Id", new { value, value2 });
                 return model.ToList();
             }
         }

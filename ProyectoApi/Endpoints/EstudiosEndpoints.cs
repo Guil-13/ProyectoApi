@@ -41,9 +41,13 @@ namespace ProyectoApi.Endpoints
             return TypedResults.Ok(model);
         }
 
-        static async Task<Ok<List<Estudio>>> GetByUserId(int id, IRepositorio<Estudio> repositorio)
+        static async Task<Results<Ok<List<Estudio>>,NoContent>> GetByUserId(int id, IRepositorio<Estudio> repositorio)
         {
             var model = await repositorio.GetAllByUserId(id);
+            if (model.Count() == 0 )
+            {
+                return TypedResults.NoContent();
+            }
             return TypedResults.Ok(model);
         }
 

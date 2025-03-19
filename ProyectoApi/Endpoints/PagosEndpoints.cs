@@ -17,7 +17,7 @@ namespace ProyectoApi.Endpoints
         {
             group.MapGet("/", GetAll).CacheOutput(c => c.Expire(TimeSpan.FromSeconds(60)).Tag("pagos-get"));
             group.MapGet("/{id:int}", GetById);
-            group.MapGet("/user/{id:int}", GetByUserId);
+            group.MapGet("/user/{id:int}/{inscripcionId:int}", GetByUserId);
             group.MapPost("/", Add).DisableAntiforgery().AddEndpointFilter<FiltroValidaciones<AddPagoDTO>>();
             group.MapPut("/{id:int}", Update).DisableAntiforgery().AddEndpointFilter<FiltroValidaciones<AddPagoDTO>>();
             group.MapDelete("/{id:int}", Delete);
@@ -41,12 +41,12 @@ namespace ProyectoApi.Endpoints
             return TypedResults.Ok(model);
         }
 
-        static async Task<Results<Ok<Pago>, NotFound>> GetByUserId(int id, IRepositorio<Pago> repositorio)
+        static async Task<Results<Ok<List<Pago>>, NoContent>> GetByUserId(int id, int inscripcionId, IRepositorio<Pago> repositorio)
         {
-            var model = await repositorio.GetByUserId(id);
-            if (model is null)
+            var model = await repositorio.GetAllBy2ParamsSinPaginacion("usuarioId",id.ToString(), "inscripcionId", inscripcionId.ToString());
+            if (model.Count() == 0)
             {
-                return TypedResults.NotFound();
+                return TypedResults.NoContent();
             }
             return TypedResults.Ok(model);
         }
